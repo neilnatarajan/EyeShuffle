@@ -14,9 +14,8 @@ class Feels extends Component {
   }
 
   render() {
-    {props.children}
+    return <div>{this.props.children}</div>
   }
-
 
   createWebRTCFeed() {
     // Initialize web cam
