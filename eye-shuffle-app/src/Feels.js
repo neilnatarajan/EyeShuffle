@@ -1,36 +1,77 @@
 import React, { Component } from 'react';
+import './Feels.css';
 
 class Feels extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      emotions: { }
+      emotions: { },
+      video: undefined,
+      canvas: undefined
     };
   }
 
   componentDidMount() {
-    this.createWebRTCFeed();
+    this.setState({
+      video: document.getElementById('stream'),
+      canvas: document.getElementById('canvas')
+    }, () => this.createWebRTCFeed());
   }
 
   render() {
-    return <div>{this.props.children}</div>
+    return <div>
+      <video id='stream'></video>
+      <canvas id='canvas' width='640' height='480'></canvas>
+    </div>
   }
 
   createWebRTCFeed() {
-    // Initialize web cam
+    const video = this.state.video;
+
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        console.log(stream);
+        video.srcObject = stream;
+        video.play();
+
+        this.startUpdateLoop();
+      })
+      .catch(err => console.log(`Error loading video: ${err}`));
   }
 
   startUpdateLoop() {
-    setInterval(() => this.updateEmotions(), 1000);
+    console.log(1);
+    this.updateEmotions();
   }
 
   getImageData() {
-    // TODO: get binary data from web cam
+    return new Promise((resolve, reject) => {
+      // TODO: get binary data from web cam
+      const width = this.state.video.videoWidth;
+      const height = this.state.video.videoHeight;
+
+      const context = this.state.canvas.getContext('2d');
+      context.drawImage(this.state.video, 0, 0, 640, 480);
+
+      return this.state.canvas.toBlob(res => resolve(res));
+    });
   }
 
   updateEmotions() {
     // TODO: Get emotions from the current image data and update the
     // emotions state.
+    this.getImageData()
+      .then(res => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const a = new Uint8Array(this.result);
+          console.log(a);
+        }
+        reader.readAsArrayBuffer(res);
+      });
   }
 }
+
+export default Feels;
