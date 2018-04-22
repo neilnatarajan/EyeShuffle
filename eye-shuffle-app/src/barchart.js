@@ -51,7 +51,7 @@ function drawAxisTickColors(){
       }
       console.log(data_rows);
       data.addRows(data_rows);
-      
+      console.log(window.web3);
       // data.addRows([
       //   [{v: [8, 0, 0], f: '8 am'}, 1],
       //   [{v: [9, 0, 0], f: '9 am'}, 2],
