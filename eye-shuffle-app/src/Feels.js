@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Emoji from './Emoji';
 import './Feels.css';
+import makeChart from './timeline';
 
 const EMOTIONS = ['happiness', 'anger', 'contempt', 'digust', 'fear', 'neutral', 'sadness', 'surprise'];
 const EMOJIS = {
@@ -48,6 +49,9 @@ class Feels extends Component {
       return emoji
     });
 
+    const dict = {};
+    dict["float"] = "left";
+
     return <div>
       <div id='stream-shadow'>
         <video id='stream' width='640' height='480'></video>
@@ -57,6 +61,11 @@ class Feels extends Component {
       <div id='emojis'>
         {emojis}
       </div>
+
+      <div id="chart_div"></div>
+
+
+      <button style={dict} onClick={makeChart}>Draw</button>
     </div>
   }
 
