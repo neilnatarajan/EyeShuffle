@@ -2,6 +2,7 @@
   "name": "eye-shuffle-app",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "express": "^4.16.3",
     "react": "^16.3.2",

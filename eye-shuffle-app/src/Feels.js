@@ -21,7 +21,7 @@ class Feels extends Component {
 
   render() {
     return <div>
-      <video id='stream'></video>
+      <video id='stream' width='640' height='480'></video>
       <canvas id='canvas' width='640' height='480'></canvas>
     </div>
   }
@@ -55,23 +55,40 @@ class Feels extends Component {
       const context = this.state.canvas.getContext('2d');
       context.drawImage(this.state.video, 0, 0, 640, 480);
 
-      return this.state.canvas.toBlob(res => resolve(res));
+      //return this.state.canvas.toBlob(res => resolve(res));
+      resolve(this.state.canvas.toDataURL());
     });
   }
 
   updateEmotions() {
 
-
-    // TODO: Get emotions from the current image data and update the
-    // emotions state.
     this.getImageData()
       .then(res => {
+
+        /*
         const reader = new FileReader();
         reader.onload = function(e) {
           const a = new Uint8Array(this.result);
           console.log(a);
         }
         reader.readAsArrayBuffer(res);
+        */
+
+        setTimeout(() => this.updateEmotions(), 1000);
+        /* Call server endpoint -> which calls azure api -> get response back */
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/emotion', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function(e) {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            //const res = JSON.parse(xhr.responseText);
+            //console.log(res);
+            console.log("GOOD");
+          }
+        };
+        console.log("RES: " + res);
+        xhr.send(JSON.stringify({image_data: res, test: "test"}));
+
       });
   }
 }
