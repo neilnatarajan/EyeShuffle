@@ -1,4 +1,4 @@
-
+  
 function face() {
   var request = require('request');
 
@@ -34,3 +34,4 @@ function face() {
   ));
 }
 
+export default face;

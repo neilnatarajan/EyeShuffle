@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
+const face = require('./face');
+
 app.use(bodyParser.json({limit: '50mb'}));
 
 const PORT = 8080;
