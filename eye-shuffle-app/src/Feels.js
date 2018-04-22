@@ -55,23 +55,26 @@ class Feels extends Component {
       const context = this.state.canvas.getContext('2d');
       context.drawImage(this.state.video, 0, 0, 640, 480);
 
-      return this.state.canvas.toBlob(res => resolve(res));
+      //return this.state.canvas.toBlob(res => resolve(res));
+      resolve(this.state.canvas.toDataURL());
     });
   }
 
   updateEmotions() {
     this.getImageData()
       .then(res => {
+
+        /*
         const reader = new FileReader();
         reader.onload = function(e) {
           const a = new Uint8Array(this.result);
           console.log(a);
         }
         reader.readAsArrayBuffer(res);
+        */
 
         setTimeout(() => this.updateEmotions(), 1000);
         /* Call server endpoint -> which calls azure api -> get response back */
-        /*
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/emotion', true);
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -82,8 +85,8 @@ class Feels extends Component {
             console.log("GOOD");
           }
         };
-        xhr.send(JSON.stringify({image_data: res}));
-        */
+        console.log("RES: " + res);
+        xhr.send(JSON.stringify({image_data: res, test: "test"}));
 
       });
   }
