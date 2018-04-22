@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Emoji from './Emoji';
 import './Feels.css';
 import makeChart from './timeline';
-
+import makeBarChart from './barchart';
 const EMOTIONS = ['happiness', 'anger', 'contempt', 'digust', 'fear', 'neutral', 'sadness', 'surprise'];
 const EMOJIS = {
   'happiness': '😀',
@@ -64,8 +64,10 @@ class Feels extends Component {
 
       <div id="chart_div"></div>
 
-
+      <div id="barchart_div"></div>
       <button style={dict} onClick={makeChart}>Draw</button>
+      <button style={dict} onClick={makeBarChart}>Draw Bar</button> 
+
     </div>
   }
 

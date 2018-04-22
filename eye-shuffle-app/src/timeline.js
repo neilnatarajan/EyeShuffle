@@ -1,6 +1,7 @@
 import {GoogleCharts} from 'google-charts';
 GoogleCharts.load('current', {packages: ['corechart', 'line']});
 
+
 var trend_list = [];
 function makeChart() {
   const xhr = new XMLHttpRequest();
