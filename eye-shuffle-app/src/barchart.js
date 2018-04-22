@@ -12,7 +12,7 @@ function makeBarChart() {
       if (xhr.readyState === 4 && xhr.status === 200) {
         const res = JSON.parse(xhr.responseText);
         bar_chart = res.bar_chart;
-        console.log(bar_chart);
+        
         GoogleCharts.load(drawAxisTickColors);
       }   
     } catch(err) {
@@ -74,6 +74,8 @@ function drawAxisTickColors(){
             max: [17, 30, 0]
           }
         },
+        width: 600,
+        height: 400,
         vAxis: {
           title: 'Number of Occurences of Emotion'
         }

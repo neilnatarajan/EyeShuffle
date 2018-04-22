@@ -5,13 +5,19 @@ body {
 }
 
 #emojis {
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
+  padding-top: -140px;
   display: flex;
+  /* position: absolute;
+  bottom: 0; */
+  justify-content: center;
+  /* float: right; */
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  height: 100%;
-  transform: translateX(-50%);
+  text-align: center;
+  width: 100%;
+  /* left: 50%; */
+  height: 180px;
+  /* transform: translateX(-50%); */
   flex-grow: 1;
 }

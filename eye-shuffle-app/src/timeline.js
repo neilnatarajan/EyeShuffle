@@ -47,7 +47,9 @@ function drawBasic() {
         },
         vAxis: {
           title: 'Sentiment'
-        }
+        },
+        width: 600,
+        height: 400
       };
 
       var chart = new GoogleCharts.api.visualization.LineChart(document.getElementById('chart_div'));

@@ -3,7 +3,11 @@
 }
 
 #stream {
-    display: float;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    transform: translateX(50%);
 }
 
 #stream-shadow {
@@ -13,5 +17,35 @@
 }
 
 body {
-    background-color: #68a2e4;
+    background-color: #4A6B8A;
+}
+
+#chart_div{
+    position: absolute;
+    bottom: 48px;
+}
+
+
+#barchart_div{
+    position: absolute;
+    bottom: 48px;
+}
+
+#analytics {
+    height: 48px;
+    margin-top: -48px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+#analytics button {
+    height: 48px;
+    width: 96px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.35));
+    padding: 0;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    margin: 4px;
 }

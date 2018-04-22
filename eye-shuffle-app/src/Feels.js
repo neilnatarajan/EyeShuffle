@@ -22,7 +22,9 @@ class Feels extends Component {
     this.state = {
       happiness: undefined,
       video: undefined,
-      canvas: undefined
+      canvas: undefined,
+      chartVisible: false,
+      barVisible: false
     };
   }
 
@@ -55,6 +57,17 @@ class Feels extends Component {
     const dict = {};
     dict["float"] = "left";
 
+    let chartStyle = {};
+    let barStyle = {};
+
+    if (!this.state.chartVisible) {
+      chartStyle.display = 'none';
+    }
+
+    if (!this.state.barVisible) {
+      barStyle.display = 'none';
+    }
+
     return <div>
       <div id='stream-shadow'>
         <video id='stream' width='640' height='480'></video>
@@ -65,13 +78,37 @@ class Feels extends Component {
         {emojis}
       </div>
 
-      <div id="chart_div"></div>
+      <div style={chartStyle} id="chart_div"></div>
 
-      <div id="barchart_div"></div>
-      <button style={dict} onClick={makeChart}>Draw</button>
-      <button style={dict} onClick={makeBarChart}>Draw Bar</button> 
+      <div style={barStyle} id="barchart_div"></div>
 
+      <div id="analytics">
+        <button style={dict} onClick={this.toggleChart.bind(this)}>Timeline</button>
+        <button style={dict} onClick={this.toggleBarChart.bind(this)}>Demographics</button> 
+      </div>
     </div>
+  }
+
+  toggleChart() {
+    if (!this.state.chartVisible) {
+      makeChart();
+    }
+
+    this.setState({
+      chartVisible: !this.state.chartVisible,
+      barVisible: false
+    });
+  }
+
+  toggleBarChart() {
+    if (!this.state.barVisible) {
+      makeBarChart();
+    }
+
+    this.setState({
+      barVisible: !this.state.barVisible,
+      chartVisible: false
+    });
   }
 
   createWebRTCFeed() {
