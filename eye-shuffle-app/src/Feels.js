@@ -2,6 +2,18 @@ import React, { Component } from 'react';
 import Emoji from './Emoji';
 import './Feels.css';
 
+const EMOTIONS = ['happiness', 'anger', 'contempt', 'digust', 'fear', 'neutral', 'sadness', 'surprise'];
+const EMOJIS = {
+  'happiness': '😀',
+  'anger': '😠',
+  'contempt': '🙄',
+  'digust': '🤮',
+  'fear': '😱',
+  'neutral': '😐',
+  'sadness': '😟',
+  'surprise': '😯'
+};
+
 class Feels extends Component {
   constructor(props) {
     super(props);
@@ -28,12 +40,23 @@ class Feels extends Component {
       });
     });
 
+    let index = 0;
+
+    const emojis = EMOTIONS.map(emotion => {
+      const emoji = <Emoji index={index.toString()} emoji={EMOJIS[emotion]} value={this.state[emotion]} />
+
+      return emoji
+    });
+
     return <div>
       <div id='stream-shadow'>
         <video id='stream' width='640' height='480'></video>
       </div>
       <canvas id='canvas' width='640' height='480'></canvas>
-      <Emoji emoji='😀' value={this.state.happiness} />
+
+      <div id='emojis'>
+        {emojis}
+      </div>
     </div>
   }
 
@@ -43,7 +66,6 @@ class Feels extends Component {
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
-        console.log(stream);
         video.srcObject = stream;
         video.play();
 
@@ -53,7 +75,6 @@ class Feels extends Component {
   }
 
   startUpdateLoop() {
-    console.log(1);
     this.updateEmotions();
   }
 
@@ -75,7 +96,7 @@ class Feels extends Component {
 
     this.getImageData()
       .then(res => {
-        setTimeout(() => this.updateEmotions(), 5000);
+        setTimeout(() => this.updateEmotions(), 500);
 
         /* Call server endpoint -> which calls azure api -> get response back */
         const xhr = new XMLHttpRequest();
@@ -86,11 +107,7 @@ class Feels extends Component {
             if (xhr.readyState === 4 && xhr.status === 200) {
               const res = JSON.parse(xhr.responseText);
 
-              this.setState({
-                happiness: res.happiness
-              });
-
-              console.log(res);
+              this.setState(res);
             }
           } catch(err) {
             console.log(err);

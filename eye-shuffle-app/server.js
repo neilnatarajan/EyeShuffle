@@ -9,6 +9,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 const PORT = 8080;
 
+const EMOTIONS = ['happiness', 'anger', 'contempt', 'digust', 'fear', 'neutral', 'sadness', 'surprise'];
+
 app.post('/emotion', (req, res) => {
   image_data = req.body.image_data;
   if (!image_data) {
@@ -25,17 +27,19 @@ app.post('/emotion', (req, res) => {
     if (apiRes.length === 0) {
       res.send({num_faces: 0})
     } else {
-      let average = 0;
+      let averages = {};
 
-      for (let face of apiRes) {
-        average += face.faceAttributes.emotion.happiness;
+      for (let emotion of EMOTIONS) {
+        averages[emotion] = 0;
+
+        for (let face of apiRes) {
+          averages[emotion] += face.faceAttributes.emotion[emotion];
+        }
+
+        averages[emotion] /= apiRes.length;
       }
 
-      if (apiRes.length > 0) {
-        average /= apiRes.length;
-      }
-
-      res.send({happiness: average, num_faces: apiRes.length});
+      res.send(averages);
     }
   });
 });
