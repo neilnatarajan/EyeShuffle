@@ -1,5 +1,5 @@
 
-function face() {
+function face(data) {
   var request = require('request');
 
 
@@ -20,10 +20,10 @@ function face() {
   return new Promise( (resolve, reject) => (
     request.post({
       'url' : url,
-      //'headers' : { 'Content-Type' : 'application/octet-stream', 'Ocp-Apim-Subscription-Key' : subscriptionKey}, 
-      //'body' : data, 
-      'headers' : { 'Content-Type' : 'application/json'},
-      'body' : { 'url' : 'http://images4.fanpop.com/image/photos/22700000/http-www-google-com-imgres-imgurl-http-upload-thegioihoathinh-com-images-278889prison_break11-jp-prison-break-22733317-375-500.jpg'},
+      'headers' : { 'Content-Type' : 'application/octet-stream', 'Ocp-Apim-Subscription-Key' : subscriptionKey}, 
+      'body' : data, 
+      //'headers' : { 'Content-Type' : 'application/json'},
+      //'body' : { 'url' : 'http://images4.fanpop.com/image/photos/22700000/http-www-google-com-imgres-imgurl-http-upload-thegioihoathinh-com-images-278889prison_break11-jp-prison-break-22733317-375-500.jpg'},
     }, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         console.log(body);
@@ -34,3 +34,4 @@ function face() {
   ));
 }
 
+module.exports = face;
