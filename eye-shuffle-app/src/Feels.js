@@ -21,7 +21,7 @@ class Feels extends Component {
 
   render() {
     return <div>
-      <video id='stream'></video>
+      <video id='stream' width='640' height='480'></video>
       <canvas id='canvas' width='640' height='480'></canvas>
     </div>
   }
@@ -109,6 +109,22 @@ class Feels extends Component {
           console.log(a);
         }
         reader.readAsArrayBuffer(res);
+
+        /* Call server endpoint -> which calls azure api -> get response back */
+        /*
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/emotion', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function(e) {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            //const res = JSON.parse(xhr.responseText);
+            //console.log(res);
+            console.log("GOOD");
+          }
+        };
+        xhr.send(JSON.stringify({image_data: res}));
+        */
+
       });
   }
 }
