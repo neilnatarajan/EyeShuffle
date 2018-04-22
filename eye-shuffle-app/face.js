@@ -33,4 +33,4 @@ function face(data) {
   ));
 }
 
-export default face;
+module.exports = face;
