@@ -5,28 +5,43 @@ const bodyParser = require('body-parser');
 const face = require('./face');
 
 app.use(bodyParser.json({limit: '50mb'}));
-
-//const face = require('./face');
-const PORT = 8080;
-
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.post("/emotion", (req, res) => {
-  //console.log(req.body.image_data);
+const PORT = 8080;
+
+app.post('/emotion', (req, res) => {
   image_data = req.body.image_data;
-  image_data = image_data.replace("data:image/png;base64,", "");
-  //console.log(image_data);
+  if (!image_data) {
+    res.end(201);
+
+    return;
+  }
+
+  image_data = image_data.replace('data:image/png;base64,', '');
+
   const buf = Buffer.from(image_data, "base64");
-  //console.log(buf);
-  face(buf).then((res) => {
-    //console.log(res);
-    console.log(res);
+
+  face(buf).then((apiRes) => {
+    if (apiRes.length === 0) {
+      res.send({num_faces: 0})
+    } else {
+      let average = 0;
+
+      for (let face of apiRes) {
+        average += face.faceAttributes.emotion.happiness;
+      }
+
+      if (apiRes.length > 0) {
+        average /= apiRes.length;
+      }
+
+      res.send({happiness: average, num_faces: apiRes.length});
+    }
   });
 });
 
 app.get("/asdf", (req, res) => {
   res.send("test");
 });
-
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

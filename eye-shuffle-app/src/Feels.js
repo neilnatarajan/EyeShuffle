@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Emoji from './Emoji';
 import './Feels.css';
 
 class Feels extends Component {
@@ -6,7 +7,7 @@ class Feels extends Component {
     super(props);
 
     this.state = {
-      emotions: { },
+      happiness: undefined,
       video: undefined,
       canvas: undefined
     };
@@ -20,9 +21,19 @@ class Feels extends Component {
   }
 
   render() {
+    const children = this.props.children;
+    const mappedChildren = React.Children.map(children, child => {
+      return React.cloneElement(child, { 
+        happiness: this.state.happiness
+      });
+    });
+
     return <div>
-      <video id='stream' width='640' height='480'></video>
+      <div id='stream-shadow'>
+        <video id='stream' width='640' height='480'></video>
+      </div>
       <canvas id='canvas' width='640' height='480'></canvas>
+      <Emoji emoji='😀' value={this.state.happiness} />
     </div>
   }
 
@@ -64,31 +75,28 @@ class Feels extends Component {
 
     this.getImageData()
       .then(res => {
+        setTimeout(() => this.updateEmotions(), 5000);
 
-        /*
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const a = new Uint8Array(this.result);
-          console.log(a);
-        }
-        reader.readAsArrayBuffer(res);
-        */
-
-        setTimeout(() => this.updateEmotions(), 1000);
         /* Call server endpoint -> which calls azure api -> get response back */
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/emotion', true);
         xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function(e) {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            //const res = JSON.parse(xhr.responseText);
-            //console.log(res);
-            console.log("GOOD");
+        xhr.onreadystatechange = (e) => {
+          try {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              const res = JSON.parse(xhr.responseText);
+
+              this.setState({
+                happiness: res.happiness
+              });
+
+              console.log(res);
+            }
+          } catch(err) {
+            console.log(err);
           }
         };
-        console.log("RES: " + res);
         xhr.send(JSON.stringify({image_data: res, test: "test"}));
-
       });
   }
 }
