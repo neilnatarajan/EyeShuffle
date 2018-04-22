@@ -1,32 +1,62 @@
 import React, { Component } from 'react';
+import './Feels.css';
 
 class Feels extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      emotions: { }
+      emotions: { },
+      video: undefined,
+      canvas: undefined
     };
   }
 
   componentDidMount() {
-    this.createWebRTCFeed();
+    this.setState({
+      video: document.getElementById('stream'),
+      canvas: document.getElementById('canvas')
+    }, () => this.createWebRTCFeed());
   }
 
   render() {
-    return <div>{this.props.children}</div>
+    return <div>
+      <video id='stream'></video>
+      <canvas id='canvas' width='640' height='480'></canvas>
+    </div>
   }
 
   createWebRTCFeed() {
-    // Initialize web cam
+    const video = this.state.video;
+
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        console.log(stream);
+        video.srcObject = stream;
+        video.play();
+
+        this.startUpdateLoop();
+      })
+      .catch(err => console.log(`Error loading video: ${err}`));
   }
 
   startUpdateLoop() {
-    setInterval(() => this.updateEmotions(), 1000);
+    console.log(1);
+    this.updateEmotions();
   }
 
   getImageData() {
-    // TODO: get binary data from web cam
+    return new Promise((resolve, reject) => {
+      // TODO: get binary data from web cam
+      const width = this.state.video.videoWidth;
+      const height = this.state.video.videoHeight;
+
+      const context = this.state.canvas.getContext('2d');
+      context.drawImage(this.state.video, 0, 0, 640, 480);
+
+      return this.state.canvas.toBlob(res => resolve(res));
+    });
   }
 
   updateEmotions() {
@@ -52,52 +82,35 @@ class Feels extends Component {
 
     // Request parameters.
 
-	request.post({
-		'url' : url,
-/*		'headers' : { 'Content-Type' : 'application/octet-stream',
-					  'Ocp-Apim-Subscription-Key' : subscriptionKey}, 
-		'body' : data, */
-		'headers' : { 'Content-Type' : 'application/json'},
-		'body' { 'url' : 'http://images4.fanpop.com/image/photos/22700000/http-www-google-com-imgres-imgurl-http-upload-thegioihoathinh-com-images-278889prison_break11-jp-prison-break-22733317-375-500.jpg'}
+    request.post({
+      'url' : url,
+      //'headers' : { 'Content-Type' : 'application/octet-stream', 'Ocp-Apim-Subscription-Key' : subscriptionKey}, 
+      //'body' : data, 
+      'headers' : { 'Content-Type' : 'application/json'},
+      'body' { 'url' : 'http://images4.fanpop.com/image/photos/22700000/http-www-google-com-imgres-imgurl-http-upload-thegioihoathinh-com-images-278889prison_break11-jp-prison-break-22733317-375-500.jpg'}
 
 
-	}, function (error, response, body) {
-	        if (!error && response.statusCode == 200) {
-	            console.log(body)
-	        }
-	    }
-	);
-    // document.querySelector("#sourceImage").src = sourceImageUrl;
-
-    // Perform the REST API call.
-/*    $.ajax({
-        url: uriBase + "?" + $.param(params),
-
-        // Request headers.
-        beforeSend: function(xhrObj){
-            xhrObj.setRequestHeader("Content-Type","application/json");
-            xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
-        },
-
-        type: "POST",
-
-        // Request body.
-        data: '{"url": ' + '"' + sourceImageUrl + '"}',
-    })
-
-    .done(function(data) {
-        // Show formatted JSON on webpage.
-        $("#responseTextArea").val(JSON.stringify(data, null, 2));
-    })
-
-    .fail(function(jqXHR, textStatus, errorThrown) {
-        // Display error message.
-        var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
-        errorString += (jqXHR.responseText === "") ? "" : (jQuery.parseJSON(jqXHR.responseText).message) ?
-            jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message;
-        alert(errorString);
-    });*/
-
-	// emotions state.
+    }, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log(body)
+        }
+      }
+    );
+   
 	}
 }
+    // TODO: Get emotions from the current image data and update the
+    // emotions state.
+    this.getImageData()
+      .then(res => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const a = new Uint8Array(this.result);
+          console.log(a);
+        }
+        reader.readAsArrayBuffer(res);
+      });
+  }
+}
+
+export default Feels;
